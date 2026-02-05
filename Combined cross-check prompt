@@ -1,0 +1,23 @@
+Cross-check ONLY reference integrity between the enumerated Dataset JSON(s) and Pipeline JSON.
+
+Inputs:
+- Pipeline JSON
+- Dataset JSON(s)
+- Connection/Datastore names available (resolved list)
+
+Tasks:
+1) Verify pipeline references:
+   - dataset names exist and match exactly
+   - connection names exist and match exactly
+   - aliases are consistent
+2) Validate mapping references:
+   - fields/columns referenced in pipeline mapping exist in dataset definition (if fields are provided)
+3) List only cross-object issues:
+   - missing references
+   - naming mismatches
+   - incompatible dataset type vs task type
+Output:
+- Cross-check status: PASS / PARTIAL / FAIL
+- Reference issues list with severity and fix hints
+Constraints:
+- Do NOT repeat dataset-only or pipeline-only issues already covered
