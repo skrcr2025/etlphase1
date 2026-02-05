@@ -1,0 +1,105 @@
+Migration Analysis
+
+Key Concepts:
+
+Baseline Assumptions
+Baseline assumptions define global rules used during enumeration.
+These assumptions are captured once and apply across all workflows.
+They represent interpretive boundaries, not execution guarantees.
+
+Workflow-Specific Assumptions (Delta)
+Each workflow may require additional assumptions beyond the baseline.
+These are captured as delta-only assumptions for that workflow.
+If no deviations exist, this is explicitly stated.
+
+Validation & Gap Analysis
+Gap and ambiguity identification is an output of validation.
+
+
+Validation Process (Per Workflow)
+- Enumerate platform JSONs from PowerCenter artifacts (best-effort)
+- Validate enumerations against PowerCenter intent + platform schema
+- Capture assumptions, unknowns, and gaps as outputs of validation
+- This is not a commitment that enumerated JSONs will execute correctly on the platform.
+
+
+Inputs Required (Per Workflow)
+
+Each workflow validation requires the following inputs:
+- PowerCenter Workflow XML
+- PowerCenter Mapping XML(s)
+- Enumerated platform JSONs:
+- dataset.json
+- pipeline.json
+- Platform JSON schema definitions (reference only)
+- Baseline assumptions file:
+- templates/enumeration_assumptions_baseline.md
+
+Step 1: Confirm Baseline Assumptions
+
+Review the baseline assumptions file.
+Treat these as global truth for enumeration.
+Do not modify the baseline during workflow validation.
+
+Step 2: Generate Workflow-Specific Assumptions (Delta)
+
+Use the delta-only assumptions prompt to generate:
+enumeration_assumptions.md
+This file must contain only:
+Deviations from baseline assumptions
+Additional assumptions required for this workflow
+Unknowns requiring confirmation
+If no deviations exist, explicitly state that none were identified.
+
+Step 3: Dataset JSON Validation
+
+Use the dataset validation prompt to:
+Compare PowerCenter source/target intent to dataset.json
+Validate schema alignment and expressiveness
+Identify:
+Missing constructs
+Simplifications
+Unsupported patterns
+Assumptions applied
+
+Output:
+validation/dataset_validation.md
+
+Step 4: Pipeline JSON Validation
+
+Use the pipeline validation prompt to:
+Compare PowerCenter workflow execution intent to pipeline.json
+Validate task structure, dependencies, and mapping expressiveness
+
+Identify:
+Dependency loss
+Conditional logic gaps
+Execution ambiguities
+Platform constraints
+
+Output:
+validation/pipeline_validation.md
+
+
+
+Outcomes
+
+For each workflow, this process produces:
+Enumerated platform JSONs
+Explicit assumption documentation
+Structured validation results
+
+Clear visibility into:
+What is representable
+What is ambiguous
+What is unsupported
+What requires manual handling
+These outputs collectively inform next-step decisions.
+
+Important Note
+
+This process is intentionally iterative.
+Findings from validation may lead to:
+Refinement of assumptions
+Adjustment of enumeration strategy
+Re-evaluation of automation scope
