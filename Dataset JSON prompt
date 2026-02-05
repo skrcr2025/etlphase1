@@ -1,0 +1,39 @@
+You are validating a PLATFORM DATASET JSON enumerated from an Informatica PowerCenter mapping.
+
+Inputs I will provide:
+- PowerCenter mapping XML (or extracted intent summary)
+- Dataset JSON (as enumerated)
+- Dataset JSON template/spec (platform design)
+
+Tasks:
+1) Infer the intended dataset behavior from PowerCenter:
+   - source vs target role
+   - table vs SQL vs file semantics (as applicable)
+   - filters, joins, projections, aggregation intent if present
+2) Validate the dataset JSON against the platform template/spec:
+   - required fields present?
+   - values aligned with spec constraints?
+   - any ambiguous or defaulted fields?
+3) Determine what is representable vs not representable in this dataset JSON format:
+   - fully representable
+   - partially representable (needs assumptions)
+   - not representable (schema limitation)
+4) Identify enumeration issues:
+   - semantically wrong fields
+   - missing required fields
+   - fields that contradict PC intent
+5) Produce a structured gap report:
+   - Blocking gaps (cannot deploy / cannot be correct)
+   - High-risk gaps (deployable but likely wrong)
+   - Medium-risk gaps
+   - Assumptions made
+6) Output:
+   - Dataset validation status: PASS / PARTIAL / FAIL
+   - Gap table with severity + rationale
+   - Assumptions list
+   - Open questions to confirm with architects (if needed)
+
+Constraints:
+- Do NOT rewrite or fix the JSON
+- Do NOT assume platform defaults unless explicitly stated in the spec
+- Be strict and schema-driven
