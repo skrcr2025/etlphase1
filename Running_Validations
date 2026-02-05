@@ -1,0 +1,8 @@
+
+
+Validation ordering (important)
+1. Baseline assumptions defined
+2. Enumerate platform JSONs
+3. Generate workflow-specific assumption deltas
+4. Run validations
+5. Generate gaps report
