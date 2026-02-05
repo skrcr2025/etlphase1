@@ -1,0 +1,113 @@
+//Dataset 1
+
+{
+"data_set_name": "wealth_file.customer.customer_info_input",
+
+"schema_folder":{"alias":"customer", "value":"data/customer_inbound"},
+"datastore_name": "wealth_filesystem"
+"data_set_type": "file",
+"materialization": "physical",
+"file_characteristics": {
+"file_name_or_pattern": "customer_info_input.txt",
+"file_location": "/ext_mount/data/wealth/data/customer_inbound",
+"file_type": "delimited",
+"field_delimiter": "|",
+"record_delimiter": "\n",
+"rec_length": "0",
+"field_count": "6",
+"header_record": "True",
+"header_count": "1",
+"trailer_record": "false",
+"trailer_record_count": "0",
+
+//Added enclosed by , compression
+
+"enclosed_by":"",
+
+compresssed":"True",
+
+"compression":{
+
+"format":"zip"
+
+}
+
+/*Ecnryption */
+
+encryption:
+
+{"enabled":"true:",
+
+"type":"",
+
+"algorithm":"AES-256"
+
+},
+"rec_layout": [
+{"field_name": "CUSTOMER_ID", "field_sequence": "1", "field_type": "string", "field_length": "30", "precision": "30", "scale": "0"},
+{"field_name": "FIRST_NAME", "field_sequence": "2", "field_type": "string", "field_length": "120", "precision": "120", "scale": "0"},
+{"field_name": "MIDDLE_NAME", "field_sequence": "3", "field_type": "string", "field_length": "120", "precision": "120", "scale": "0"},
+{"field_name": "LAST_NAME", "field_sequence": "4", "field_type": "string", "field_length": "120", "precision": "120", "scale": "0"},
+{"field_name": "DATE_OF_BIRTH", "field_sequence": "5", "field_type": "string", "field_length": "8", "precision": "120", "scale": "0", "date_format": "YYYY-MM-DD"},
+{"field_name": "GENDER", "field_sequence": "6", "field_type": "string", "field_length": "10", "precision": "10", "scale": "0"}
+]
+}
+
+
+
+
+
+
+
+//Dataset 2
+
+{
+"data_set_name": "wealth_file.transaction.transaction_daily",
+
+"schema_folder":{"alias":"transaction", "value":"data/txn/inbound/"},
+"datastore_name": "wealth_filesystem"
+"data_set_type": "file",
+"materialization": "physical",
+"file_characteristics": {
+"file_name_or_pattern": "transaction_daily.txt",
+"file_location": "/ext_mount/data/wealth/data/txn/inbound/transaction_daily",
+"file_type": "delimited",
+"field_delimiter": "|",
+"record_delimiter": "\n",
+"rec_length": "0",
+"field_count": "6",
+"header_record": "True",
+"header_count": "1",
+"trailer_record": "false",
+"trailer_record_count": "0",
+
+//Added enclosed by , compression
+
+"enclosed_by":"",
+
+compresssed":"True",
+
+"compression":{
+
+"format":"zip"
+
+}
+
+/*Ecnryption */
+
+encryption:
+
+{"enabled":"true:",
+
+"type":"",
+
+"algorithm":"AES-256"
+
+},
+"rec_layout": [
+{"field_name": "TRANSACTION_ID", "field_sequence": "1", "field_type": "string", "field_length": "30", "precision": "30", "scale": "0"},
+{"field_name": "TRANSACTION_DT", "field_sequence": "2", "field_type": "string", "field_length": "8", "precision": "8", "scale": "0"},
+{"field_name":"CUSTOMER_ID", "field_sequence": "3", "field_type": "string", "field_length": "10", "precision": "10", "scale": "0"},
+{"field_name": "PRODUCT_CD", "field_sequence": "4", "field_type": "string", "field_length": "10", "precision": "10", "scale": "0"}
+]
+}
