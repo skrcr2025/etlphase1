@@ -1,0 +1,80 @@
+You **should not treat those two files as a “schema.”** They’re **example payloads / sample templates**, not an authoritative spec, and they even contain inconsistencies that a real JSON Schema would never allow.
+
+What you *can* do (and what I recommend) is: **use them as an “example-driven spec” for Phase-1**, then later convert into a real JSON Schema when the architects finalize.
+
+## Why they can’t be used as schema (quick, factual)
+
+In your examples:
+
+* They contain **non-JSON comments** (`//`, `/* */`) and missing commas/quotes → not valid JSON. 
+* Field naming is inconsistent (`data_set_name` vs `dataset_name`, `data_set_type` vs `dataset_type`).  
+* Some keys are malformed (`encryption:` without quotes; `"enabled":"true:"` typo; `compresssed`). 
+* The “Transient Dataset” mixes pseudo-JSON + arrays with broken braces and field mappings that aren’t syntactically correct JSON. 
+
+So: **as a JSON Schema spec, it will fail immediately**.
+
+---
+
+## What I suggest (practical, Phase-1 friendly)
+
+### Option A (best for now): **Example-driven spec + checklist validation**
+
+Create two files in `schemas/platform/`:
+
+1. `schemas/platform/dataset.examples.file.jsonc`  *(keep JSONC with comments)*
+
+   * based on your file dataset examples 
+2. `schemas/platform/dataset.examples.db.jsonc` *(tables + transient)*
+
+   * based on your DB + transient examples 
+
+Then create one “rules” doc:
+3) `schemas/platform/dataset.spec.md`
+
+* “Required fields by dataset_type”
+* “Allowed values”
+* “Field meanings”
+* “What’s optional vs required”
+* “Known ambiguities”
+
+**Your validation prompt should reference `dataset.spec.md` as the authoritative spec** (until a real schema exists).
+
+This keeps you moving without blocking on the architects.
+
+---
+
+### Option B (next step when ready): **Generate a real JSON Schema**
+
+Once you agree internally on field names + required/optional rules, convert to:
+
+* `schemas/platform/dataset.schema.json`
+
+That’s when you can do strict machine validation.
+
+---
+
+## Update to your prompts (so they match reality right now)
+
+### If you do NOT have a real schema yet:
+
+Replace:
+
+* “Platform dataset schema (authoritative spec): `schemas/platform/dataset.schema.json`”
+
+With:
+
+* “Platform dataset spec (authoritative for Phase-1): `schemas/platform/dataset.spec.md`”
+* “Reference examples: `schemas/platform/dataset.examples.*.jsonc`”
+
+### If you DO have a real schema later:
+
+Switch back to the JSON Schema file.
+
+---
+
+## Quick answer to your question
+
+✅ **Can we use them as schema?**
+**No** — use them as **examples**, and write a short **spec.md** that your validators use as the “rules”.
+
+If you want, I can draft the exact minimal `dataset.spec.md` headings + the “required fields by dataset_type” table based strictly on what’s in these examples (file/table/transient) and the fields they show.
