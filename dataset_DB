@@ -1,0 +1,104 @@
+//Dataset
+
+{
+"data_set_name": "wealthdb.customer_subject_area.customer", 
+"datastore_name": "wealthdb",
+"data_set_type": "table",
+"materialization": "physical",
+
+ "app_id": "ap135217",
+
+"rec_layout":
+
+[
+
+{"field_name": "CUSTOMER_ID", "field_sequence": "1", "field_type": "string", "field_length": "30", "precision": "30", "scale": "0"},
+{"field_name": "FIRST_NAME", "field_sequence": "2", "field_type": "string", "field_length": "120", "precision": "120", "scale": "0"},
+{"field_name": "MIDDLE_NAME", "field_sequence": "3", "field_type": "string", "field_length": "120", "precision": "120", "scale": "0"},
+{"field_name": "LAST_NAME", "field_sequence": "4", "field_type": "string", "field_length": "120", "precision": "120", "scale": "0"},
+{"field_name": "DATE_OF_BIRTH", "field_sequence": "5", "field_type": "string", "field_length": "8", "precision": "120", "scale": "0", "date_format": "YYYY-MM-DD"},
+{"field_name": "GENDER", "field_sequence": "6", "field_type": "string", "field_length": "10", "precision": "10", "scale": "0"},
+{"field_name": "ADDRESS_LINE_1", "field_sequence": "7", "field_type": "string", "field_length": "100", "precision": "100", "scale": "0"},
+{"field_name": "ADDRESS_LINE_2", "field_sequence": "8", "field_type": "string", "field_length": "100", "precision": "100", "scale": "0"},
+{"field_name": "CITY", "field_sequence": "9", "field_type": "string", "field_length": "80", "precision": "80", "scale": "0"},
+{"field_name": "STATE_CODE", "field_sequence": "10", "field_type": "string", "field_length": "2", "precision": "2", "scale": "0"},
+{"field_name": "ZIP", "field_sequence": "11", "field_type": "string", "field_length": "10", "precision": "10", "scale": "0"},
+{"field_name": "INSERT_DATE", "field_sequence": "12", "field_type": "date", "field_length": "0", "precision": "0", "scale": "0"},
+{"field_name": "UPDATE_DATE", "field_sequence": "13", "field_type": "date", "field_length": "0", "precision": "0", "scale": "0"}
+]
+}
+
+
+
+
+
+//Transient Dataset
+
+{
+
+"table_name":          "invest_model_asset_alloc_union",
+"table_description":   "Transient table like structure containing union of investment model and asset allocation details",
+"schema_name":         "model_portfolio",   
+"datastore_name":      "portfolio_advisory",
+
+ "app_id": "ap135217",
+"dataset_name":        "portfolio_advisory.model_portfolio.invest_model_asset_alloc_union",
+"dataset_type":        "transient"      // meaning not a physical table and not a view or synonym.
+"dataset_description": "Transient structure containing union of investment model and asset allocation details for different investment models"
+"dataset_rec_layout":     [
+                            {field_name: bus_ent_id, field_sequence: 1, data_type: NUMBER, precision: 38, scale: 0, length: 0, nullable: NO, primary_key: NA},
+                            {field_name: bus_rel_ent_id, field_sequence: 2, data_type: NUMBER, precision: 38, scale: 0, length: 0, nullable: NO, primary_key: NA},
+                            {field_name: bus_ent_cd, field_sequence: 3, data_type: STRING, precision: 0, scale: 0, length: 50, nullable: NO, primary_key: NA},
+                            {field_name: bus_end_desc, field_sequence: 4, data_type: STRING , precision: 0, scale: 0, length: 100, nullable: NO, primary_key: NA},
+                            {field_name: purpose_cd, field_sequence: 5, data_type: STRING, precision: 0, scale: 0, length: 50, nullable: NO, primary_key: NA},
+                            {field_name: update_id, field_sequence: 6, data_type: STRING, precision: 0, scale: 0, length: 50, nullable: NO, primary_key: NA},
+                            {field_name: update_timestamp, field_sequence: 7, data_type: DATETIME, precision: 0, scale: 0, length: 0, nullable: NO, primary_key: NA}
+                        ],
+
+"sql":                  "
+                        SELECT 
+                            im.investment_model_id AS bus_ent_id,
+                            aap.asset_allocation_product_id AS bus_rel_ent_id,
+                            im.investment_model_cd AS bus_ent_cd,
+                            im.investment_model_name AS bus_end_desc,
+                            'MODELPROD' AS purpose_cd,
+                            'system' AS update_id,
+                            SYSTIMESTAMP AS update_timestamp
+                        FROM model_portfolio.investment_model im,
+                             model_portfolio.asset_allocation_product aap
+                        WHERE im.asset_allocation_product_id = aap.asset_allocation_product_id
+
+                     
+
+                         union all
+
+                            SELECT 
+                            aap.asset_allocation_product_id AS bus_ent_id,
+                            aab.asset_allocation_bus_line_id AS bus_rel_ent_id,
+                            aap.product_cd AS bus_ent_cd,
+                            aap.product_desc AS bus_end_desc,
+                            'PRODBUSL' AS purpose_cd,
+                            'system' AS update_id,
+                            SYSTIMESTAMP AS update_timestamp
+                        FROM model_portfolio.asset_allocation_product aap
+                             model_portfolio.asset_allocation_bus_line aab
+                        WHERE aap.asset_allocation_bus_line_id = aab.asset_allocation_bus_line_id",
+
+"sources":      [
+                            {source: portfolio_advisory.model_portfolio.investment_model, alias: im},
+                            {source: portfolio_advisory.model_portfolio.asset_allocation_product, alias: aap}
+                        ],
+
+"field_mappings":        [
+                            {target_field: bus_ent_id, source_field: im.investment_model_id, aap.asset_allocation_product_id]},
+                            {target_field: bus_rel_ent_id, source_field: [aap.asset_allocation_product_id, aab.asset_allocation_bus_line_id]},
+                            {target_field: bus_ent_cd, source_field: im.investment_model_cd, aap.product_cd]},
+                            {target_field: bus_end_desc, source_field: [im.investment_model_name, aap.product_desc]},
+                            {target_field: purpose_cd, source_field: ['MODELPROD', 'PRODBUSL']},
+                            {target_field: update_id, source_field: "system"},
+                            {target_field: update_timestamp, source_field: "SYSTIMESTAMP"}
+                        ]
+
+
+
+}
