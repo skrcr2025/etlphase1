@@ -1,0 +1,54 @@
+Create a project folder structure for PowerCenter-to-Target-Platform migration validation.
+
+Do NOT generate any content inside files.
+Do NOT include canonical IR.
+Do NOT add assumptions, prompts, or explanations.
+Only create directories and empty files.
+
+Create the following structure exactly:
+
+migration-validation/
+├── schemas/
+│   └── platform/
+│       ├── pipeline.schema.json
+│       ├── dataset.schema.json
+│       ├── connection.schema.json
+│       └── datastore.schema.json
+│
+├── templates/
+│   ├── enumeration_assumptions_baseline.md
+│   └── wf_assumptions_template.md
+│
+├── prompts/
+│   ├── generate_delta_assumptions.prompt.md
+│   ├── validate_dataset_json.prompt.md
+│   ├── validate_pipeline_json.prompt.md
+│   └── gap_analysis.prompt.md
+│
+├── instructions/
+│   └── validation_instructions.md
+│
+├── validations/
+│   └── workflows/
+│       └── WF_SAMPLE/
+│           ├── input/
+│           │   ├── workflow.xml
+│           │   ├── mappings/
+│           │   │   └── mapping.xml
+│           │   └── parameters/
+│           │       └── paramfile.txt
+│           ├── enumerated_json/
+│           │   ├── dataset.json
+│           │   └── pipeline.json
+│           ├── enumeration_assumptions.md
+│           ├── validation/
+│           │   ├── dataset_validation.md
+│           │   ├── pipeline_validation.md
+│           │   └── gap_report.md
+│           └── summary.md
+
+Rules:
+- Create empty files only.
+- Do not add sample text.
+- Do not infer content.
+- Folder and file names must match exactly.
