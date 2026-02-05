@@ -21,16 +21,12 @@ Create the following structure exactly:
 ├── templates/
 │   ├── enumeration_assumptions_baseline.md
 │   └── wf_assumptions_template.md
-│
 ├── prompts/
 │   ├── generate_delta_assumptions.prompt.md
 │   ├── validate_dataset_json.prompt.md
 │   ├── validate_pipeline_json.prompt.md
-│   └── gap_analysis.prompt.md
-│
 ├── instructions/
 │   └── validation_instructions.md
-│
 ├── validations/
 │   └── workflows/
 │       └── WF_SAMPLE/
@@ -49,6 +45,7 @@ Create the following structure exactly:
 │           │   ├── pipeline_validation.md
 │           │   └── gap_report.md
 │           └── summary.md
+
 03_connection-foundation/
 ├── 01_inputs/
 │   ├── powercenter/
@@ -78,7 +75,15 @@ Create the following structure exactly:
 │   └── reports/
 │       └── connection_coverage_report.md
 └── 05_tests/
+
 04_migration-automation/
+
+99_shared/
+├── common/
+├── constants/
+├── sample_data/
+└── utilities/
+
 
 
 Rules:
