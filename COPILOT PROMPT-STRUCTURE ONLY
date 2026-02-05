@@ -7,14 +7,17 @@ Only create directories and empty files.
 
 Create the following structure exactly:
 
-migration-validation/
-├── schemas/
-│   └── platform/
-│       ├── pipeline.schema.json
-│       ├── dataset.schema.json
-│       ├── connection.schema.json
-│       └── datastore.schema.json
-│
+01_schemas/
+├── platform-json/
+│   ├── dataset.schema.json
+│   ├── pipeline.schema.json
+│   ├── connection.schema.json
+│   └── datastore.schema.json
+└── examples/
+    ├── dataset.example.json
+    └── pipeline.example.json
+
+02_migration-validation/
 ├── templates/
 │   ├── enumeration_assumptions_baseline.md
 │   └── wf_assumptions_template.md
@@ -46,6 +49,37 @@ migration-validation/
 │           │   ├── pipeline_validation.md
 │           │   └── gap_report.md
 │           └── summary.md
+03_connection-foundation/
+├── 01_inputs/
+│   ├── powercenter/
+│   │   ├── connections_export.csv
+│   │   └── connections_export.xml
+│   ├── tnsnames/
+│   │   └── tnsnames.ora
+│   ├── odbc/
+│   │   ├── odbc.ini
+│   │   └── odbcinst.ini
+│   └── other/
+├── 02_reference/
+│   ├── naming_standards.md
+│   └── environment_mapping.yaml
+├── 03_build/
+│   ├── parsers/
+│   ├── normalizers/
+│   └── resolvers/
+├── 04_outputs/
+│   ├── datastores/
+│   │   └── <datastore>.json
+│   ├── connections/
+│   │   └── <connection>.json
+│   ├── registry/
+│   │   ├── connection_registry.csv
+│   │   └── datastore_registry.csv
+│   └── reports/
+│       └── connection_coverage_report.md
+└── 05_tests/
+04_migration-automation/
+
 
 Rules:
 - Create empty files only.
