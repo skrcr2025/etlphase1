@@ -1,0 +1,40 @@
+You are validating a PLATFORM PIPELINE JSON enumerated from an Informatica PowerCenter workflow.
+
+Inputs I will provide:
+- PowerCenter workflow XML (or extracted intent summary)
+- Pipeline JSON (as enumerated)
+- Pipeline JSON template/spec (platform design)
+
+Tasks:
+1) Infer the intended orchestration behavior from PowerCenter workflow:
+   - task sequencing / dependencies
+   - retries, restartability, failure handling intent
+   - session/mapping execution boundaries
+2) Validate the pipeline JSON against the platform template/spec:
+   - required top-level fields present?
+   - task structure correct?
+   - dependency model valid?
+   - workloadProfile/run_time/task types valid?
+3) Determine what workflow semantics are representable vs not representable:
+   - fully representable
+   - partially representable (needs assumptions)
+   - not representable (schema limitation)
+4) Identify enumeration issues:
+   - missing dependencies
+   - incorrect task decomposition (too few/too many tasks)
+   - fields that contradict PC workflow intent
+5) Produce a structured gap report:
+   - Blocking gaps (control plane rejection / cannot generate DAG)
+   - High-risk gaps (DAG created but wrong orchestration)
+   - Medium-risk gaps
+   - Assumptions made
+6) Output:
+   - Pipeline validation status: PASS / PARTIAL / FAIL
+   - Gap table with severity + rationale
+   - Assumptions list
+   - Open questions to confirm with architects (if needed)
+
+Constraints:
+- Do NOT generate DAG code
+- Do NOT rewrite the JSON
+- Be strict and schema-driven
