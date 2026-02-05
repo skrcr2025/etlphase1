@@ -1,0 +1,118 @@
+PowerCenter → Platform JSON Enumeration + Validation (Migration Analysis)
+
+Important Usage Rule (Read First):
+All Copilot prompts are responsible for creating and writing output files directly.
+Team members must not manually copy outputs into files unless explicitly instructed.
+
+If a prompt specifies a file path, Copilot must write the content to that file.
+
+1) Folder Setup (Once)
+
+Ensure the following structure exists before running any prompts:
+
+migration-validation/
+├── schemas/platform/
+├── templates/
+├── prompts/
+├── instructions/
+└── validations/workflows/<WF_NAME>/
+
+Each workflow folder must contain:
+
+validations/workflows/<WF_NAME>/
+├── input/
+├── enumerated_json/
+├── validation/
+└── summary.md
+
+2) Inputs Required (Per Workflow)
+
+Place these files manually before running any prompt:
+
+Required
+input/workflow.xml
+input/mappings/*.xml
+enumerated_json/dataset.json
+enumerated_json/pipeline.json
+
+Reference Files (already present)
+templates/enumeration_assumptions_baseline.md
+schemas/platform/*.schema.json
+
+3) Step-by-Step Execution (Exact Order)
+Step 1 — Manual Enumeration (Human step)
+
+Team manually creates:
+
+enumerated_json/
+├── dataset.json
+└── pipeline.json
+
+
+Using:
+PowerCenter XMLs
+Platform JSON schemas
+Baseline assumptions
+
+No Copilot prompt is used in this step.
+
+Step 2 — Generate Workflow-Specific Assumptions (Delta-Only)
+Purpose: Capture only deviations, extra assumptions, and unknowns.
+
+Prompt to use:
+prompts/generate_delta_assumptions.prompt.md
+
+Copilot behavior:
+Reads baseline assumptions
+Analyzes WF XML, Mapping XML, enumerated JSONs
+Writes output directly to:
+validations/workflows/<WF_NAME>/enumeration_assumptions.md
+
+Team action:
+Run the prompt
+Review the generated file
+Do NOT manually rewrite it
+
+Step 3 — Dataset JSON Validation
+Purpose: Validate dataset.json against PowerCenter mapping intent and platform schema.
+
+Prompt to use:
+prompts/validate_dataset_json.prompt.md
+
+Copilot behavior:
+Compares mapping XML + dataset.json
+Identifies expressiveness limits, gaps, assumptions
+Writes output directly to:
+validations/workflows/<WF_NAME>/validation/dataset_validation.md
+
+Team action:
+Run the prompt
+Review the generated file
+Do NOT copy/paste output manually
+
+Step 4 — Pipeline JSON Validation
+Purpose: Validate pipeline.json against workflow execution intent and platform schema.
+
+Prompt to use:
+prompts/validate_pipeline_json.prompt.md
+
+Copilot behavior:
+Compares workflow XML + pipeline.json
+Validates task order, dependencies, mappings
+Writes output directly to:
+validations/workflows/<WF_NAME>/validation/pipeline_validation.md
+
+Team action:
+Run the prompt
+Review the generated file
+
+Step 5 — Optional Cross-Object Consistency Check
+Purpose: Validate wiring consistency between dataset.json and pipeline.json.
+
+Prompt to use:
+prompts/combined_crosscheck.prompt.md
+
+Copilot behavior:
+Cross-checks dataset references, aliases, connections
+Writes output directly to:
+validations/workflows/<WF_NAME>/validation/combined_crosscheck.md
