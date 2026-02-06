@@ -1,0 +1,100 @@
+Overview
+API endpoint for registering and managing datasets within a specific datastore and environment.
+
+API Endpoint
+POST	/api/v1/datasets	Register a new dataset (table or file)
+Request Body Parameters
+dataset_name	string	✅ Yes	Fully qualified name: <database.schema.dataset>	Must follow the naming standard
+datastore_name	string	✅ Yes	Name of the parent datastore	Must exist in the system
+dataset_description	string	✅ Yes	Description of the dataset's contents	Non-empty string
+dataset_type	string (enum)	✅ Yes	Type of data object	table, file
+materialization	string (enum)	✅ Yes	Storage type	physical, virtual
+project_name	string	✅ Yes	Name of the project owning the dataset (at app id level, preferably starts with app id)	Must be a valid project name
+file_characteristics	object	⚠️ Cond.	Metadata for file-based datasets	Required if dataset_type is file
+rec_layout	array	✅ Yes	List of fields/columns defining the schema	At least one field required
+1. File Characteristics Schema
+Applicable only when dataset_type is file.
+
+schema_folder	object	No	Logical folder mapping	{"alias":"customer", "value":"data/customer"}
+file_name_or_pattern	string	✅ Yes	Exact name or regex pattern	customer_info_*.txt
+file_location	string	✅ Yes	Absolute path on the filesystem	/ext_mount/data/wealth/...
+file_type	string	✅ Yes	File format	delimited, fixed_width
+field_delimiter	string	⚠️ Cond.	Character separating fields	`
+record_delimiter	string	⚠️ Cond.	Character separating records	\n (Required if delimited)
+rec_length	number	⚠️ Cond.	Fixed length of each record	100 (Required if fixed_width)
+field_count	number	✅ Yes	Number of columns in the file	10
+header_record	boolean	✅ Yes	Does the file have a header?	true
+header_count	number	✅ Yes	Number of header rows	1
+trailer_record	boolean	✅ Yes	Does the file have a trailer?	false
+trailer_record_count	number	✅ Yes	Number of trailer rows	0
+enclosed_by	string	No	Character enclosing fields	"
+compression	object	✅ Yes	Compression settings	See Compression Schema
+encryption	object	✅ Yes	Encryption settings	See Encryption Schema
+Compression & Encryption Nested Schemas
+Compression: {"enabled": boolean, "format": "zip"}
+Encryption: {"enabled": boolean, "type": string, "algorithm": string}
+2. Record Layout (rec_layout) Schema
+Array of objects defining each field in the dataset.
+
+field_name	string	✅ Yes	Name of the column	CUSTOMER_ID
+field_sequence	number	✅ Yes	1-based index of the field	1
+field_type	string	✅ Yes	Data type	string, number, date, timestamp
+field_length	number	✅ Yes	Maximum width of the field	30
+precision	number	No	Numerical precision	10
+scale	number	No	Numerical scale	2
+date_format	string	No	Format string for date types	YYYY-MM-DD
+
+
+
+Request Examples
+Example 1: Database Table Dataset
+{
+    "dataset_name": "wealthdb.customer_subject_area.customer",
+    "datastore_name": "wealthdb",
+    "dataset_description": "Customer main table",
+    "dataset_type": "table",
+    "materialization": "physical",
+    "project_name": "ap135217-wealth-project",
+    "rec_layout": [
+        {
+            "field_name": "CUSTOMER_ID",
+            "field_sequence": 1,
+            "field_type": "string",
+            "field_length": 30
+        },
+        {
+            "field_name": "INSERT_DATE",
+            "field_sequence": 2,
+            "field_type": "date",
+            "field_length": 0,
+            "date_format": "YYYY-MM-DD"
+        }
+    ]
+}
+Example 2: Delimited File Dataset
+{
+    "dataset_name": "wealthdb.landing.customer_file",
+    "datastore_name": "wealth_nfs",
+    "dataset_description": "Inbound customer file",
+    "dataset_type": "file",
+    "materialization": "physical",
+    "project_name": "ap135217-wealth-project",
+    "file_characteristics": {
+        "file_name_or_pattern": "cust_*.txt",
+        "file_location": "/mnt/data/inbound",
+        "file_type": "delimited",
+        "field_delimiter": "|",
+        "record_delimiter": "\n",
+        "field_count": 2,
+        "header_record": true,
+        "header_count": 1,
+        "trailer_record": false,
+        "trailer_record_count": 0,
+        "compression": { "enabled": false, "format": "zip" },
+        "encryption": { "enabled": false, "type": "", "algorithm": "" }
+    },
+    "rec_layout": [
+        { "field_name": "ID", "field_sequence": 1, "field_type": "string", "field_length": 10 },
+        { "field_name": "NAME", "field_sequence": 2, "field_type": "string", "field_length": 100 }
+    ]
+}
